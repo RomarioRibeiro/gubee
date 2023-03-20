@@ -5,7 +5,7 @@
 	version="3.1">
 	<display-name>super-copo</display-name>
 	<welcome-file-list>
-		<welcome-file>GestaoEmpresas.xhtml</welcome-file>
+		<welcome-file>Produto.xhtml</welcome-file>
 		
 	</welcome-file-list>
 
