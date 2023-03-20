@@ -2,28 +2,54 @@ package com.gubee.erp.repository;
 
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 
 import com.gubee.erp.model.Produto;
 
 public class ProdutoRepository {
 
-	public static void main(String[] args) {
-		
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("gubeePu") ;
-		
-		EntityManager em = emf.createEntityManager();
-		
-		List<Produto> listar = em.createQuery("from Produto", Produto.class).getResultList();
-		
-		System.out.println(listar);
-		
-		em.close();
-		emf.close();
-		
-		
+	@Inject
+	private EntityManager manager;
+
+
+	public ProdutoRepository() {
+
 	}
+
+	public ProdutoRepository(EntityManager manager) {
+		this.manager = manager;
+	}
+
+	public Produto porId(Long id) {
+		return manager.find(Produto.class, id);
+	}
+
+	public List<Produto> pesquisar(String nome) {
+		String jpql = "from Produto where nome like :nome";
+		
+		TypedQuery<Produto> query = manager
+				.createQuery(jpql, Produto.class);
+		
+		query.setParameter("nome", nome + "%");
+		
+		return query.getResultList();
+	}
+	
+	public List<Produto> todas() {
+         return manager.createQuery("from Produto", Produto.class).getResultList();
+    }
+
+	public Produto guardar(Produto Produto) {
+		return manager.merge(Produto);
+	}
+
+	public void remover(Produto Produto) {
+		Produto = porId(Produto.getId());
+		manager.remove(Produto);
+	}
+	
+	
 	
 }
